@@ -25,8 +25,12 @@ jobs:
           version: 8
           run_install: false
 
-      - name: Verify pnpm installation
-        run: pnpm --version
+      - name: Verify pnpm is available
+        run: |
+          echo "Checking pnpm version:"
+          pnpm --version
+          echo "PNPM path:"
+          which pnpm
 
       - name: Install dependencies
         run: pnpm install
@@ -61,8 +65,12 @@ jobs:
           version: 8
           run_install: false
 
-      - name: Verify pnpm installation
-        run: pnpm --version
+      - name: Verify pnpm is available
+        run: |
+          echo "Checking pnpm version:"
+          pnpm --version
+          echo "PNPM path:"
+          which pnpm
 
       - name: Install dependencies
         run: pnpm install
