@@ -1,9 +1,7 @@
 {
   "name": "backend",
   "scripts": {
-    "dev": "nodemon src/index.ts",
-    "build": "tsc",
-    "test": "vitest",
-    "lint": "eslint ."
+    "test": "mocha tests/**/*.test.js",
+    "test:watch": "mocha --watch tests/**/*.test.js"
   }
 }
