@@ -21,22 +21,18 @@ jobs:
 
       - name: Install pnpm
         run: |
-          # First try corepack (built into Node.js)
-          corepack enable || echo "Corepack not available"
-          corepack prepare pnpm@8 --activate || echo "Corepack prepare failed"
+          # First try corepack (preferred method)
+          corepack enable
+          corepack prepare pnpm@8 --activate
           
-          # Fallback to npm install
-          if ! command -v pnpm &> /dev/null; then
-            npm install -g pnpm@8
-            echo "Adding pnpm to PATH: $(npm root -g)/pnpm/bin"
-            echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
-          fi
+          # Verify installation and add to PATH
+          echo "Adding pnpm to PATH: $(npm bin -g)"
+          echo "$(npm bin -g)" >> $GITHUB_PATH
 
       - name: Verify pnpm
         run: |
           echo "PNPM version: $(pnpm --version)"
           echo "PNPM path: $(which pnpm)"
-          echo "Current PATH: $PATH"
 
       - name: Install dependencies
         run: pnpm install
@@ -66,17 +62,9 @@ jobs:
 
       - name: Install pnpm
         run: |
-          corepack enable || echo "Corepack not available"
-          corepack prepare pnpm@8 --activate || echo "Corepack prepare failed"
-          
-          if ! command -v pnpm &> /dev/null; then
-            npm install -g pnpm@8
-            echo "Adding pnpm to PATH: $(npm root -g)/pnpm/bin"
-            echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
-          fi
-
-      - name: Verify pnpm
-        run: pnpm --version
+          corepack enable
+          corepack prepare pnpm@8 --activate
+          echo "$(npm bin -g)" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: pnpm install
