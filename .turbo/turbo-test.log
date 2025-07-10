@@ -1,0 +1,5 @@
+
+> sprint-planner@1.0.0 test D:\Project\sprint-planner
+> echo "Tests should be defined in workspaces" && exit 0
+
+"Tests should be defined in workspaces" 

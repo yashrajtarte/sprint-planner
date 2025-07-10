@@ -17,30 +17,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
-          run_install: false
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Run linting
-        run: pnpm run lint
+        run: pnpm run turbo:lint
 
       - name: Run tests
-        run: pnpm run test
+        run: pnpm run turbo:test
 
       - name: Build all apps
-        run: pnpm run build
+        run: pnpm run turbo:build
 
   deploy:
     needs: test_and_build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,20 +49,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
-          run_install: false
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Build project
-        run: pnpm run build
+        run: pnpm run turbo:build
 
       - name: Deploy to Vercel
         run: |
           npm install -g vercel
-          vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --confirm --org ${{ secrets.VERCEL_ORG_ID }} --project ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel --prod --token ${{ secrets.VERCEL_TOKEN }} \
+            --confirm --org ${{ secrets.VERCEL_ORG_ID }} \
+            --project ${{ secrets.VERCEL_PROJECT_ID }}

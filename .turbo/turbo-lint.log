@@ -1,0 +1,5 @@
+
+> sprint-planner@1.0.0 lint D:\Project\sprint-planner
+> echo "Linting should be defined in workspaces" && exit 0
+
+"Linting should be defined in workspaces" 

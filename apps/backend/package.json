@@ -1,7 +1,7 @@
 {
-  "name": "backend",
   "scripts": {
-    "test": "mocha tests/**/*.test.js",
-    "test:watch": "mocha --watch tests/**/*.test.js"
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint ."
   }
 }

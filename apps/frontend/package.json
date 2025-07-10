@@ -1,7 +1,7 @@
 {
-  "name": "frontend",
   "scripts": {
+    "build": "vite build",
     "test": "vitest run",
-    "test:watch": "vitest watch"
+    "lint": "eslint ."
   }
 }

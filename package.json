@@ -5,9 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"No tests in root workspace\" && exit 0",
-    "build": "turbo run build",
-    "lint": "turbo run lint"
+    "build": "echo \"Build should be defined in workspaces\" && exit 0",
+    "test": "echo \"Tests should be defined in workspaces\" && exit 0",
+    "lint": "echo \"Linting should be defined in workspaces\" && exit 0",
+    "turbo:build": "turbo run build",
+    "turbo:test": "turbo run test",
+    "turbo:lint": "turbo run lint"
   },
   "keywords": [],
   "author": "",
