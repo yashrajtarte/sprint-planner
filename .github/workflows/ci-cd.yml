@@ -19,18 +19,24 @@ jobs:
           node-version: "20"
           cache: 'pnpm'
 
-      - name: Install pnpm (Direct Method)
+      - name: Install pnpm
         run: |
-          npm install -g pnpm@8
-          echo "Adding pnpm to PATH: $(npm root -g)/pnpm/bin"
-          echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
+          # First try corepack (built into Node.js)
+          corepack enable || echo "Corepack not available"
+          corepack prepare pnpm@8 --activate || echo "Corepack prepare failed"
+          
+          # Fallback to npm install
+          if ! command -v pnpm &> /dev/null; then
+            npm install -g pnpm@8
+            echo "Adding pnpm to PATH: $(npm root -g)/pnpm/bin"
+            echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
+          fi
 
-      - name: Verify pnpm installation
+      - name: Verify pnpm
         run: |
           echo "PNPM version: $(pnpm --version)"
           echo "PNPM path: $(which pnpm)"
           echo "Current PATH: $PATH"
-
 
       - name: Install dependencies
         run: pnpm install
@@ -52,23 +58,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: 'pnpm'
 
-      - name: Install pnpm (Direct Method)
+      - name: Install pnpm
         run: |
-          npm install -g pnpm@8
-          echo "Adding pnpm to PATH: $(npm root -g)/pnpm/bin"
-          echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
+          corepack enable || echo "Corepack not available"
+          corepack prepare pnpm@8 --activate || echo "Corepack prepare failed"
+          
+          if ! command -v pnpm &> /dev/null; then
+            npm install -g pnpm@8
+            echo "Adding pnpm to PATH: $(npm root -g)/pnpm/bin"
+            echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
+          fi
 
-      - name: Verify pnpm installation
-        run: |
-          echo "PNPM version: $(pnpm --version)"
-          echo "PNPM path: $(which pnpm)"
+      - name: Verify pnpm
+        run: pnpm --version
 
       - name: Install dependencies
         run: pnpm install
