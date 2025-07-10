@@ -13,24 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js with Corepack
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: 'pnpm'
 
-      - name: Install pnpm
+      - name: Install and Activate pnpm
         run: |
-          # First try corepack (preferred method)
+          # Enable Corepack (built into Node.js)
           corepack enable
+          # Install and activate pnpm
           corepack prepare pnpm@8 --activate
-          
-          # Verify installation and add to PATH
-          echo "Adding pnpm to PATH: $(npm bin -g)"
-          echo "$(npm bin -g)" >> $GITHUB_PATH
-
-      - name: Verify pnpm
-        run: |
+          # Verify installation
           echo "PNPM version: $(pnpm --version)"
           echo "PNPM path: $(which pnpm)"
 
@@ -54,17 +49,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js with Corepack
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: 'pnpm'
 
-      - name: Install pnpm
+      - name: Install and Activate pnpm
         run: |
           corepack enable
           corepack prepare pnpm@8 --activate
-          echo "$(npm bin -g)" >> $GITHUB_PATH
+          pnpm --version
 
       - name: Install dependencies
         run: pnpm install
