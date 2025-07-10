@@ -51,16 +51,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
-      # 🔥 SAME FIX FOR DEPLOY JOB
       - name: Install pnpm globally
         run: npm install -g pnpm@8
-
-      - name: Verify pnpm installation
-        run: |
-          echo "PNPM version: $(pnpm --version)"
-          echo "PNPM path: $(which pnpm)"
 
       - name: Install dependencies
         run: pnpm install
@@ -70,7 +64,7 @@ jobs:
 
       - name: Deploy to Vercel
         run: |
-          npm install -g vercel
-          vercel --prod --token ${{ secrets.VERCEL_TOKEN }} \
-            --confirm --org ${{ secrets.VERCEL_ORG_ID }} \
-            --project ${{ secrets.VERCEL_PROJECT_ID }}
+          npm install -g vercel@latest
+          vercel deploy --prod --token ${{ secrets.VERCEL_TOKEN }} \
+            --scope ${{ secrets.VERCEL_SCOPE }} \
+            --yes
