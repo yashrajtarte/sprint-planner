@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   test_and_build:
@@ -16,21 +16,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
-          run_install: false
+      - name: Install pnpm globally
+        run: npm install -g pnpm@8
 
-      - name: Verify pnpm is available
+      - name: Verify pnpm installation
         run: |
-          echo "Checking pnpm version:"
-          pnpm --version
-          echo "PNPM path:"
-          which pnpm
+          echo "PNPM version: $(pnpm --version)"
+          echo "PNPM path: $(which pnpm)"
+          echo "Adding pnpm to PATH"
+          echo "$(npm root -g)/pnpm/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: pnpm install
@@ -47,8 +43,7 @@ jobs:
   deploy:
     needs: test_and_build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
+    if: github.ref == "refs/heads/main"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -56,21 +51,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
-          run_install: false
+      # 🔥 SAME FIX FOR DEPLOY JOB
+      - name: Install pnpm globally
+        run: npm install -g pnpm@8
 
-      - name: Verify pnpm is available
+      - name: Verify pnpm installation
         run: |
-          echo "Checking pnpm version:"
-          pnpm --version
-          echo "PNPM path:"
-          which pnpm
+          echo "PNPM version: $(pnpm --version)"
+          echo "PNPM path: $(which pnpm)"
 
       - name: Install dependencies
         run: pnpm install
