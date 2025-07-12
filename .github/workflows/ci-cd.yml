@@ -21,8 +21,15 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
+        id: pnpm-setup
         with:
           version: 8
+          
+      - name: Verify pnpm installation
+        run: |
+          echo "PNPM version: $(pnpm --version)"
+          echo "PNPM path: $(which pnpm)"
+          echo "PNPM installation directory: $(pnpm root -g)"
 
       - name: Install dependencies
         run: pnpm install
@@ -54,6 +61,9 @@ jobs:
         uses: pnpm/action-setup@v3
         with:
           version: 8
+
+      - name: Verify pnpm installation
+        run: pnpm --version
 
       - name: Install dependencies
         run: pnpm install
