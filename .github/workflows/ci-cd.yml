@@ -27,9 +27,9 @@ jobs:
           
       - name: Verify pnpm installation
         run: |
-          echo "PNPM version: $(pnpm --version)"
-          echo "PNPM path: $(which pnpm)"
-          echo "PNPM installation directory: $(pnpm root -g)"
+          which pnpm || echo "::error::pnpm not found in PATH"
+          pnpm --version || echo "::error::pnpm command failed"
+          echo "PATH: $PATH"
 
       - name: Install dependencies
         run: pnpm install
@@ -43,7 +43,7 @@ jobs:
       - name: Build all apps
         run: pnpm run turbo:build
 
-  deploy:
+deploy:
     needs: test_and_build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -63,7 +63,10 @@ jobs:
           version: 8
 
       - name: Verify pnpm installation
-        run: pnpm --version
+        run: |
+          which pnpm || (echo "::error::pnpm not found in PATH" && exit 1)
+          pnpm --version || (echo "::error::pnpm command failed" && exit 1)
+          echo "PATH: $PATH"
 
       - name: Install dependencies
         run: pnpm install
