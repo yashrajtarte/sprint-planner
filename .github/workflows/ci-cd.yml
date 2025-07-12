@@ -19,17 +19,27 @@ jobs:
           node-version: "20"
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        id: pnpm-setup
-        with:
-          version: 8
+      - name: Install pnpm (corepack method)
+        run: |
+          # First try corepack (comes with Node.js 16+)
+          corepack enable
+          corepack prepare pnpm@8 --activate
           
+          # Verify installation
+          if ! command -v pnpm &> /dev/null; then
+            echo "::warning::Corepack method failed, falling back to npm install"
+            npm install -g pnpm@8
+            echo "Adding pnpm to PATH: $(npm root -g)/bin"
+            echo "$(npm root -g)/bin" >> $GITHUB_PATH
+          fi
+
       - name: Verify pnpm installation
         run: |
-          which pnpm || echo "::error::pnpm not found in PATH"
-          pnpm --version || echo "::error::pnpm command failed"
+          echo "Checking pnpm installation..."
+          which pnpm || echo "::error::pnpm still not found in PATH"
+          pnpm --version || (echo "::error::pnpm command failed" && exit 1)
           echo "PATH: $PATH"
+          echo "Global node_modules: $(npm root -g)"
 
       - name: Install dependencies
         run: pnpm install
@@ -57,19 +67,17 @@ jobs:
           node-version: "20"
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
+      - name: Install pnpm (corepack method)
+        run: |
+          corepack enable
+          corepack prepare pnpm@8 --activate
+          if ! command -v pnpm &> /dev/null; then
+            npm install -g pnpm@8
+            echo "$(npm root -g)/bin" >> $GITHUB_PATH
+          fi
 
       - name: Verify pnpm installation
-        run: |
-          which pnpm || (echo "::error::pnpm not found in PATH" && exit 1)
-          pnpm --version || (echo "::error::pnpm command failed" && exit 1)
-          echo "PATH: $PATH"
-
-      - name: Install dependencies
-        run: pnpm install
+        run: pnpm --version
 
       - name: Build project
         run: pnpm run turbo:build
